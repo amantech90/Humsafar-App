@@ -113,3 +113,9 @@ export const searchMemories = searchText => dispatch => {
       console.log(err);
     });
 };
+
+export const getMemoriesById = id => dispatch => {
+  db.memoriesById(id).then(res => {
+    console.log(res, 'res');
+  });
+};

@@ -12,3 +12,4 @@ export const TOGGLE_LIKE = 'TOGGLE_LIKE';
 export const SEARCH_MEMORIES = 'SEARCH_MEMORIES';
 export const ADD_REMINDER = 'ADD_REMINDER';
 export const GET_REMINDER = 'GET_REMINDER';
+export const MEMORIES_BY_ID = 'MEMORIES_BY_ID';

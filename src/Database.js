@@ -171,7 +171,7 @@ export default class Database {
       this.initDB()
         .then(db => {
           db.transaction(tx => {
-            tx.executeSql('SELECT * FROM Memories WHERE primaryId = ?', [
+            tx.executeSql('SELECT * FROM ImagesPath WHERE memoriesId = ? ', [
               id,
             ]).then(([tx, results]) => {
               console.log(results);
@@ -213,6 +213,7 @@ export default class Database {
               ],
             ).then(([tx, results]) => {
               resolve(results);
+              addImage(data.imagesPaths);
             });
           })
             .then(result => {
@@ -368,10 +369,11 @@ export default class Database {
       this.initDB()
         .then(db => {
           db.transaction(tx => {
-            tx.executeSql('INSERT INTO Reminders VALUES (?, ?)', [
-              data.id,
-              data.path,
-            ]).then(([tx, results]) => {
+            tx.executeSql(
+              'INSERT INTO ImagesPath ((memoriesId , path) VALUES (?, ?)',
+              [data],
+            ).then(([tx, results]) => {
+              console.log(results, 'resu;');
               resolve(results);
             });
           })

@@ -1,6 +1,9 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import styled from 'styled-components';
 import BackNavbar from '../BackNavbar/BackNavbar';
+import {useDispatch, useSelector} from 'react-redux';
+import {getMemoriesById} from '../../Actions/memories';
+
 const Container = styled.View`
   flex: 1;
   background: #ffffff;
@@ -23,8 +26,12 @@ const Desc = styled.Text`
   font-family: Ubuntu-Light;
 `;
 const ViewPage = ({route, navigation}) => {
-  //   console.log(route, 'state');
-  const {title, desc, day, month, year} = route.params.user;
+  console.log(route.params.user, 'state');
+  const {title, desc, day, month, year, primaryId} = route.params.user;
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(getMemoriesById(primaryId));
+  }, []);
   return (
     <Container>
       <BackNavbar Back={() => navigation.goBack()} title="Back" />

@@ -6,9 +6,11 @@ import {useDispatch, useSelector} from 'react-redux';
 import {addMemories} from '../../Actions/memories';
 import Loader from '../Loader/LoaderScreen';
 import {ADD_MEMORIES} from '../../Actions/types';
-import Emoticon from '../Assests/Emoticon';
 import Message from '../Message/Message';
-const windowWidth = Dimensions.get('window').width;
+import Camera from '../Assests/Camera';
+import ImagePicker from 'react-native-image-picker';
+import RNFS from 'react-native-fs';
+
 const windowHeight = Dimensions.get('window').height;
 const Container = styled.TouchableOpacity`
   align-items: center;
@@ -23,7 +25,7 @@ const Container = styled.TouchableOpacity`
   background-color: #03a9f4;
 `;
 const Text = styled.Text`
-  color: #fff;
+  color: #292929;
   font-family: Ubuntu-Light;
   text-align: center;
   font-size: 20px;
@@ -47,6 +49,31 @@ const Text1 = styled.Text`
   font-family: Ubuntu-Light;
   text-align: center;
 `;
+
+const ImageContainer = styled.View`
+  flex-direction: row;
+`;
+const Image = styled.Image`
+  width: 70px;
+  height: 70px;
+  margin-left: 10px;
+  margin-top: 20px;
+  border-radius: 5px;
+`;
+
+const CameraContainer = styled.TouchableOpacity`
+  margin-top: 10px;
+`;
+
+const options = {
+  title: 'Please choose your image',
+  storageOptions: {
+    skipBackup: true,
+    path: 'images',
+  },
+};
+const primaryId = Math.floor(Math.random() * 10000000);
+
 function Create() {
   const [value, onChangeText] = React.useState(null);
 
@@ -65,6 +92,7 @@ function Create() {
     'Dec',
   ];
   const [value1, onChangeText1] = React.useState(null);
+  const [imagesPath, setImagesPath] = React.useState([]);
   const [modalVisible, setModalVisible] = React.useState(false);
   const [isTextInputChecked, setTextInputChecked] = React.useState(false);
   const [isTextInputChecked1, setTextInputChecked1] = React.useState(false);
@@ -86,7 +114,7 @@ function Create() {
   const addMemo = () => {
     if (value !== '' && value1 !== '' && value !== null && value1 !== null) {
       let data = {
-        primaryId: Math.floor(Math.random() * 10000000),
+        primaryId: primaryId,
         title: value,
         desc: value1,
         like: 0,
@@ -95,6 +123,7 @@ function Create() {
         year: new Date(Date.now()).getFullYear(),
         imagePath: '',
         audioPath: '',
+        imagesPaths: imagesPath,
       };
       dispatch(addMemories(data));
       onChangeText(null);
@@ -109,7 +138,32 @@ function Create() {
   const checkTodayPostExists = memories.memories.filter(
     mem => mem.day === new Date(Date.now()).getDate(),
   );
+  const openImagePicker = () => {
+    ImagePicker.launchImageLibrary(options, response1 => {
+      console.log(response1);
+      copy(response1.uri, response1.fileName);
+    });
+  };
+  const copy = (source, fileName) => {
+    const imagePath = `${RNFS.ExternalDirectoryPath}/${fileName}`.replace(
+      /:/g,
+      '-',
+    );
+    let imageData = {
+      memoriesId: primaryId,
+      path: imagePath,
+    };
 
+    RNFS.copyFile(source, imagePath)
+      .then(res => {
+        console.log(res);
+        setImagesPath([...imagesPath, imageData]);
+      })
+      .catch(err => {
+        console.log('ERROR: image file write failed!!!');
+        console.log(err.message, err.code);
+      });
+  };
   return (
     <>
       <Container
@@ -130,7 +184,7 @@ function Create() {
         onRequestClose={() => BackFunc()}>
         <ModalContainer>
           <BackNavbar Back={() => BackFunc()} title="Back" />
-          {checkTodayPostExists.length > 0 ? (
+          {checkTodayPostExists.length > 5 ? (
             <Message />
           ) : (
             <>
@@ -154,7 +208,7 @@ function Create() {
                   borderRadius: 20,
                   paddingVertical: 10,
                   paddingHorizontal: 20,
-                  marginVertical: 30,
+                  marginTop: 30,
                   backgroundColor: isTextInputChecked1 ? '#fff' : '#f5f5f5',
                   borderWidth: 2,
                   borderColor: isTextInputChecked1 ? '#03a9f4' : '#f5f5f5',
@@ -166,12 +220,34 @@ function Create() {
                 onFocus={() => blur1()}
                 placeholder="Your memories"
               />
+              <CameraContainer onPress={() => openImagePicker()}>
+                <Camera />
+              </CameraContainer>
+
               {!loader.loader[ADD_MEMORIES] === true ? (
                 <Button onPress={() => addMemo()}>
                   <Text1>Save</Text1>
                 </Button>
               ) : (
                 <Loader color="#03a9f4" size="large" />
+              )}
+              {imagesPath.length > 0 ? (
+                <ImageContainer>
+                  {imagesPath.map((image, index) => (
+                    <Image
+                      key={index}
+                      source={{uri: `file://${image.path}`}}
+                      style={{
+                        shadowOffset: {width: 0, height: 10},
+                        shadowColor: '#adadad',
+                        shadowOpacity: 0.61,
+                        shadowRadius: 24,
+                      }}
+                    />
+                  ))}
+                </ImageContainer>
+              ) : (
+                <Text>Hey</Text>
               )}
             </>
           )}
