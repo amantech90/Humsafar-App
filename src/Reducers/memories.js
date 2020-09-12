@@ -1,6 +1,6 @@
 import {
   GET_ALL_MEMORIES,
-  GET_SINGLE_MEMORIES,
+  GET_PHOTOS,
   ADD_MEMORIES,
   TOGGLE_LIKE,
   SERACH_MEMORIES,
@@ -9,7 +9,7 @@ import {
 
 const initalState = {
   memories: [],
-  currentMemories: {},
+  currentImages: [],
   searchedMemories: [],
 };
 
@@ -20,10 +20,10 @@ export default function(state = initalState, action) {
         ...state,
         memories: action.payload,
       };
-    case GET_SINGLE_MEMORIES:
+    case GET_PHOTOS:
       return {
         ...state,
-        currentMemories: action.payload,
+        currentImages: action.payload,
       };
     case ADD_MEMORIES:
       return {

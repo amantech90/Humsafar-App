@@ -1,5 +1,5 @@
 import SQLite from 'react-native-sqlite-storage';
-SQLite.DEBUG(true);
+SQLite.DEBUG(false);
 SQLite.enablePromise(true);
 const database_name = 'Humsafar.db';
 const database_version = '1.0';
@@ -23,24 +23,24 @@ export default class Database {
 
               db.executeSql('SELECT 1 FROM Memories LIMIT 1')
                 .then(() => {
-                  console.log('Database is ready ... executing query ...');
+                  //consolelog('Database is ready ... executing query ...');
                 })
                 .catch(error => {
                   db.transaction(tx => {
                     tx.executeSql(
-                      'CREATE TABLE IF NOT EXISTS Memories (primaryId INTEGER PRIMARY KEY AUTOINCREMENT, title, desc, like, day, month,year,imagePath,audioPath)',
+                      'CREATE TABLE IF NOT EXISTS Memories (primaryId TEXT PRIMARY KEY, title, desc, like, day, month,year,imagePath,audioPath)',
                     );
                   })
                     .then(() => {
-                      console.log('Table created successfully');
+                      //consolelog('Table created successfully');
                     })
                     .catch(error => {
-                      console.log(error);
+                      //consolelog(error);
                     });
                 });
               db.executeSql('SELECT 1 from Reminders LIMIT 1')
                 .then(() => {
-                  console.log('Database is ready ... executing query ...');
+                  //consolelog('Database is ready ... executing query ...');
                 })
                 .catch(error => {
                   db.transaction(tx => {
@@ -49,15 +49,15 @@ export default class Database {
                     );
                   })
                     .then(() => {
-                      console.log('Table created successfully');
+                      //consolelog('Table created successfully');
                     })
                     .catch(error => {
-                      console.log(error);
+                      //consolelog(error);
                     });
                 });
               db.executeSql('SELECT 1 from ImagesPath LIMIT 1')
                 .then(() => {
-                  console.log('Database is ready ... executing query ...');
+                  //consolelog('Database is ready ... executing query ...');
                 })
                 .catch(error => {
                   db.transaction(tx => {
@@ -66,15 +66,15 @@ export default class Database {
                     );
                   })
                     .then(() => {
-                      console.log('Table created successfully');
+                      //consolelog('Table created successfully');
                     })
                     .catch(error => {
-                      console.log(error);
+                      //consolelog(error);
                     });
                 });
               db.executeSql('SELECT 1 from AudioPath LIMIT 1')
                 .then(() => {
-                  console.log('Database is ready ... executing query ...');
+                  //consolelog('Database is ready ... executing query ...');
                 })
                 .catch(error => {
                   db.transaction(tx => {
@@ -83,20 +83,20 @@ export default class Database {
                     );
                   })
                     .then(() => {
-                      console.log('Table created successfully');
+                      //consolelog('Table created successfully');
                     })
                     .catch(error => {
-                      console.log(error);
+                      //consolelog(error);
                     });
                 });
               resolve(db);
             })
             .catch(error => {
-              console.log(error);
+              //consolelog(error);
             });
         })
         .catch(error => {
-          console.log('echoTest failed - plugin not functional');
+          //consolelog('echoTest failed - plugin not functional');
         });
     });
   }
@@ -104,13 +104,13 @@ export default class Database {
     if (db) {
       db.close()
         .then(status => {
-          console.log('Database CLOSED');
+          //consolelog('Database CLOSED');
         })
         .catch(error => {
-          console.log(error);
+          //consolelog(error);
         });
     } else {
-      console.log('Database was not OPENED');
+      //consolelog('Database was not OPENED');
     }
   }
   listMemories() {
@@ -157,16 +157,16 @@ export default class Database {
               this.closeDatabase(db);
             })
             .catch(err => {
-              console.log(err);
+              //consolelog(err);
             });
         })
         .catch(err => {
-          console.log(err);
+          //consolelog(err);
         });
     });
   }
-  memoriesById(id) {
-    console.log(id);
+  getPhotos(id) {
+    let images = [];
     return new Promise(resolve => {
       this.initDB()
         .then(db => {
@@ -174,10 +174,22 @@ export default class Database {
             tx.executeSql('SELECT * FROM ImagesPath WHERE memoriesId = ? ', [
               id,
             ]).then(([tx, results]) => {
-              console.log(results);
+              //consolelog(results);
               if (results.rows.length > 0) {
-                let row = results.rows.item(0);
-                resolve(row);
+                let len = results.rows.length;
+                for (let i = 0; i < len; i++) {
+                  let row = results.rows.item(i);
+
+                  const {path, memoriesId} = row;
+                  images.push({
+                    path,
+                    memoriesId,
+                  });
+                }
+
+                resolve(images);
+              } else {
+                resolve(images);
               }
             });
           })
@@ -185,15 +197,18 @@ export default class Database {
               this.closeDatabase(db);
             })
             .catch(err => {
-              console.log(err);
+              //consolelog(err);
             });
         })
         .catch(err => {
-          console.log(err);
+          //consolelog(err);
         });
     });
   }
   addMemories(data) {
+    for (let i = 0; i < data.imagesPaths.length; i++) {
+      this.addImage(data.imagesPaths[i].memoriesId, data.imagesPaths[i].path);
+    }
     return new Promise(resolve => {
       this.initDB()
         .then(db => {
@@ -213,18 +228,17 @@ export default class Database {
               ],
             ).then(([tx, results]) => {
               resolve(results);
-              addImage(data.imagesPaths);
             });
           })
             .then(result => {
               this.closeDatabase(db);
             })
             .catch(err => {
-              console.log(err);
+              //consolelog(err);
             });
         })
         .catch(err => {
-          console.log(err);
+          //consolelog(err);
         });
     });
   }
@@ -255,11 +269,11 @@ export default class Database {
               this.closeDatabase(db);
             })
             .catch(err => {
-              console.log(err);
+              //consolelog(err);
             });
         })
         .catch(err => {
-          console.log(err);
+          //consolelog(err);
         });
     });
   }
@@ -271,7 +285,7 @@ export default class Database {
             tx.executeSql('DELETE FROM Memories WHERE primaryId = ?', [
               id,
             ]).then(([tx, results]) => {
-              console.log(results);
+              //consolelog(results);
               resolve(results);
             });
           })
@@ -279,11 +293,11 @@ export default class Database {
               this.closeDatabase(db);
             })
             .catch(err => {
-              console.log(err);
+              //consolelog(err);
             });
         })
         .catch(err => {
-          console.log(err);
+          //consolelog(err);
         });
     });
   }
@@ -332,11 +346,11 @@ export default class Database {
             })
             .catch(err => {
               resolve([]);
-              console.log(err);
+              //consolelog(err);
             });
         })
         .catch(err => {
-          console.log(err);
+          //consolelog(err);
         });
     });
   }
@@ -356,38 +370,36 @@ export default class Database {
               this.closeDatabase(db);
             })
             .catch(err => {
-              console.log(err);
+              //consolelog(err);
             });
         })
         .catch(err => {
-          console.log(err);
+          //consolelog(err);
         });
     });
   }
-  addImage(data) {
-    return new Promise(resolve => {
-      this.initDB()
-        .then(db => {
-          db.transaction(tx => {
-            tx.executeSql(
-              'INSERT INTO ImagesPath ((memoriesId , path) VALUES (?, ?)',
-              [data],
-            ).then(([tx, results]) => {
-              console.log(results, 'resu;');
-              resolve(results);
-            });
-          })
-            .then(result => {
-              this.closeDatabase(db);
-            })
-            .catch(err => {
-              console.log(err);
-            });
+  addImage(id, path) {
+    this.initDB()
+      .then(db => {
+        db.transaction(tx => {
+          tx.executeSql(
+            'INSERT INTO ImagesPath (memoriesId , path) VALUES (?, ?)',
+            [id, path],
+          ).then(([tx, results]) => {
+            return true;
+          });
         })
-        .catch(err => {
-          console.log(err);
-        });
-    });
+          .then(result => {
+            // this.closeDatabase(db);
+            return true;
+          })
+          .catch(err => {
+            //consolelog(err);
+          });
+      })
+      .catch(err => {
+        //consolelog(err);
+      });
   }
   getReminder() {
     return new Promise(resolve => {
@@ -417,11 +429,11 @@ export default class Database {
               this.closeDatabase(db);
             })
             .catch(err => {
-              console.log(err);
+              //consolelog(err);
             });
         })
         .catch(err => {
-          console.log(err);
+          //consolelog(err);
         });
     });
   }
@@ -442,11 +454,11 @@ export default class Database {
               this.closeDatabase(db);
             })
             .catch(err => {
-              console.log(err);
+              //consolelog(err);
             });
         })
         .catch(err => {
-          console.log(err);
+          //consolelog(err);
         });
     });
   }

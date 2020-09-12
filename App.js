@@ -16,7 +16,7 @@ const App = () => {
   }, []);
   // const backupOfDb = () => {
   //   RNFS.readFile(
-  //     '/data/data/com.wishbirds.humsafar/databases/Humsafar.db',
+  //     '/data/data/com.wishbirds.humsafar1/databases/Humsafar.db',
   //     'base64',
   //   ).then(value =>
   //     RNFS.getAllExternalFilesDirs()
@@ -27,22 +27,22 @@ const App = () => {
   //           'base64',
   //         );
   //       })
-  //       .then(data => console.log(data, 'Successful')),
+  //       .then(data => //consolelog(data, 'Successful')),
   //   );
   // };
   // const GDriveInit = async () => {
   //   let accessToken = info.idToken ? info.idToken : null;
-  //   console.log(accessToken, 'du');
+  //   //consolelog(accessToken, 'du');
   //   if (accessToken) {
   //     GDrive.setAccessToken(accessToken);
   //     GDrive.init();
-  //     console.log(GDrive.isInitialized());
+  //     //consolelog(GDrive.isInitialized());
   //     if (GDrive.isInitialized()) {
   //       RNFS.readFile(
-  //         '/storage/emulated/0/Android/data/com.wishbirds.humsafar/files/Humsafar_copy.db',
+  //         '/storage/emulated/0/Android/data/com.wishbirds.humsafar1/files/Humsafar_copy.db',
   //         'base64',
   //       ).then(data => {
-  //         console.log(GDrive.files);
+  //         //consolelog(GDrive.files);
   //         GDrive.files
   //           .createFileMultipart(
   //             data,
@@ -53,11 +53,11 @@ const App = () => {
   //             },
   //             true,
   //           )
-  //           .then(data => console.log(data));
+  //           .then(data => //consolelog(data));
   //       });
   //     }
   //   } else {
-  //     console.log('nop no');
+  //     //consolelog('nop no');
   //   }
   // };
 
@@ -70,7 +70,7 @@ const App = () => {
 };
 
 const NotificationService = async data => {
-  console.log(data, 'notification');
+  //consolelog(data, 'notification');
 };
 
 AppRegistry.registerHeadlessTask('Noti', () => NotificationService);

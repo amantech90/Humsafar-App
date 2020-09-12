@@ -7,14 +7,14 @@ import {
 } from './types';
 
 export const setCurrentUser = userData => dispatch => {
-  console.log(userData, 'from');
+  //consolelog(userData, 'from');
   if (userData) {
     dispatch({
       type: SET_CURRENT_USER,
       payload: userData,
     });
   } else {
-    console.log('here');
+    //consolelog('here');
     dispatch({
       type: REMOVE_CURRENT_USER,
       payload: userData,

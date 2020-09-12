@@ -104,7 +104,7 @@ const Search = () => {
     onChangeText(text);
     dispatch(searchMemories(text));
   };
-  // console.log(searchArray);
+  // //consolelog(searchArray);
   let list = (
     <TextContainer>
       <Text1>Search your memories</Text1>

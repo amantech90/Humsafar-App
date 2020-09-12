@@ -40,14 +40,14 @@ const Auth = () => {
       Toast.show('Successfully login!', Toast.SHORT);
       dispatch(setCurrentUser(userInfo));
     } catch (error) {
-      console.log(error);
+      //consolelog(error);
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
         dispatch(setCurrentUser(undefined));
         setIsLoading(false);
         // user cancelled the login flow
       } else if (error.code === statusCodes.IN_PROGRESS) {
         dispatch(setCurrentUser(undefined));
-        console.log('error occured IN_PROGRESS');
+        //consolelog('error occured IN_PROGRESS');
         Toast.show('error occured IN_PROGRESS', Toast.SHORT);
         setIsLoading(false);
 
@@ -55,13 +55,13 @@ const Auth = () => {
       } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
         dispatch(setCurrentUser(undefined));
         setIsLoading(false);
-        console.log('error occured PLAY_SERVICES_NOT_AVAILABLE');
+        //consolelog('error occured PLAY_SERVICES_NOT_AVAILABLE');
         Toast.show('error occured PLAY_SERVICES_NOT_AVAILABLE', Toast.SHORT);
         // play services not available or outdated
       } else {
         dispatch(setCurrentUser(undefined));
         setIsLoading(false);
-        console.log('error occured unknow error');
+        //consolelog('error occured unknow error');
         Toast.show('error occured unknow error', Toast.SHORT);
         // some other error happened
       }

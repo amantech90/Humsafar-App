@@ -64,13 +64,13 @@ const Reminder = props => {
     let endDate = new Date(
       new Date(startDate).setFullYear(new Date().getFullYear() + 1),
     ).toISOString();
-    console.log(startDate);
-    console.log(endDate);
+    //consolelog(startDate);
+    //consolelog(endDate);
     RNCalendarEvents.authorizationStatus().then(data => {
-      console.log(data);
+      //consolelog(data);
     });
     RNCalendarEvents.authorizeEventStore().then(data => {
-      console.log(data, 'djo');
+      //consolelog(data, 'djo');
     });
     let calendar = {
       id: 'Humsafar_Reminder_1',

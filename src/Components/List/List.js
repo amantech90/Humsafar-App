@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import Heart from '../Assests/Heart';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {useDispatch} from 'react-redux';
-import {togglelikeMemories} from '../../Actions/memories';
+import {getPhotos, togglelikeMemories} from '../../Actions/memories';
 import {useNavigation} from '@react-navigation/native';
 const List = props => {
   const Container = styled.TouchableOpacity`
@@ -56,8 +56,8 @@ const List = props => {
   };
   const navigation = useNavigation();
   const goToViewPage = item => {
-    // console.log(item, 'ddhikdh');
-
+    // //consolelog(item, 'ddhikdh');
+    dispatch(getPhotos(item.primaryId));
     navigation.navigate('View', {screen: 'View1', params: {user: item}});
   };
   const {item} = props;

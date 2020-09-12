@@ -10,6 +10,8 @@ import Message from '../Message/Message';
 import Camera from '../Assests/Camera';
 import ImagePicker from 'react-native-image-picker';
 import RNFS from 'react-native-fs';
+import {ScrollView} from 'react-native-gesture-handler';
+import {set} from 'react-native-reanimated';
 
 const windowHeight = Dimensions.get('window').height;
 const Container = styled.TouchableOpacity`
@@ -25,7 +27,7 @@ const Container = styled.TouchableOpacity`
   background-color: #03a9f4;
 `;
 const Text = styled.Text`
-  color: #292929;
+  color: #ffffff;
   font-family: Ubuntu-Light;
   text-align: center;
   font-size: 20px;
@@ -50,7 +52,10 @@ const Text1 = styled.Text`
   text-align: center;
 `;
 
-const ImageContainer = styled.View`
+const ImageContainer = styled.TouchableOpacity`
+  flex-direction: row;
+`;
+const ImageContainer1 = styled.View`
   flex-direction: row;
 `;
 const Image = styled.Image`
@@ -72,25 +77,29 @@ const options = {
     path: 'images',
   },
 };
-const primaryId = Math.floor(Math.random() * 10000000);
+const monthNames = [
+  'Jan',
+  'Feb',
+  'Mar',
+  'Apr',
+  'May',
+  'Jun',
+  'Jul',
+  'Aug',
+  'Sep',
+  'Oct',
+  'Nov',
+  'Dec',
+];
+const primaryId =
+  new Date(Date.now()).getDate() +
+  Math.floor(Math.random() * 10000000) +
+  monthNames[new Date(Date.now()).getMonth()] +
+  new Date(Date.now()).getFullYear();
 
 function Create() {
   const [value, onChangeText] = React.useState(null);
 
-  const monthNames = [
-    'Jan',
-    'Feb',
-    'Mar',
-    'Apr',
-    'May',
-    'Jun',
-    'Jul',
-    'Aug',
-    'Sep',
-    'Oct',
-    'Nov',
-    'Dec',
-  ];
   const [value1, onChangeText1] = React.useState(null);
   const [imagesPath, setImagesPath] = React.useState([]);
   const [modalVisible, setModalVisible] = React.useState(false);
@@ -111,6 +120,13 @@ function Create() {
     setTextInputChecked1(false);
   };
 
+  const deleteImage = path => {
+    let copyOfImages = [...imagesPath];
+    //consolelog(copyOfImages);
+    let filter = copyOfImages.filter(image => image.path !== path);
+    setImagesPath(filter);
+  };
+
   const addMemo = () => {
     if (value !== '' && value1 !== '' && value !== null && value1 !== null) {
       let data = {
@@ -126,6 +142,7 @@ function Create() {
         imagesPaths: imagesPath,
       };
       dispatch(addMemories(data));
+      setImagesPath([]);
       onChangeText(null);
       onChangeText1(null);
       BackFunc();
@@ -140,7 +157,7 @@ function Create() {
   );
   const openImagePicker = () => {
     ImagePicker.launchImageLibrary(options, response1 => {
-      console.log(response1);
+      //consolelog(response1);
       copy(response1.uri, response1.fileName);
     });
   };
@@ -156,12 +173,11 @@ function Create() {
 
     RNFS.copyFile(source, imagePath)
       .then(res => {
-        console.log(res);
         setImagesPath([...imagesPath, imageData]);
       })
       .catch(err => {
-        console.log('ERROR: image file write failed!!!');
-        console.log(err.message, err.code);
+        //consolelog('ERROR: image file write failed!!!');
+        //consolelog(err.message, err.code);
       });
   };
   return (
@@ -184,7 +200,7 @@ function Create() {
         onRequestClose={() => BackFunc()}>
         <ModalContainer>
           <BackNavbar Back={() => BackFunc()} title="Back" />
-          {checkTodayPostExists.length > 5 ? (
+          {checkTodayPostExists.length > 0 ? (
             <Message />
           ) : (
             <>
@@ -231,11 +247,12 @@ function Create() {
               ) : (
                 <Loader color="#03a9f4" size="large" />
               )}
-              {imagesPath.length > 0 ? (
-                <ImageContainer>
-                  {imagesPath.map((image, index) => (
+              <ScrollView horizontal>
+                {imagesPath.map((image, index) => (
+                  <ImageContainer
+                    key={index}
+                    onPress={() => deleteImage(image.path)}>
                     <Image
-                      key={index}
                       source={{uri: `file://${image.path}`}}
                       style={{
                         shadowOffset: {width: 0, height: 10},
@@ -244,11 +261,9 @@ function Create() {
                         shadowRadius: 24,
                       }}
                     />
-                  ))}
-                </ImageContainer>
-              ) : (
-                <Text>Hey</Text>
-              )}
+                  </ImageContainer>
+                ))}
+              </ScrollView>
             </>
           )}
         </ModalContainer>

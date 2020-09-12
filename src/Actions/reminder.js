@@ -21,7 +21,7 @@ export const addReminder = data => dispatch => {
       });
     })
     .catch(error => {
-      console.log(error);
+      //consolelog(error);
       dispatch({
         type: STOP_LOADER,
         payload: {name: ADD_REMINDER, value: false},
@@ -36,7 +36,7 @@ export const getReminder = data => dispatch => {
   });
   db.getReminder()
     .then(calender => {
-      console.log(calender);
+      //consolelog(calender);
 
       dispatch({
         type: STOP_LOADER,
@@ -48,7 +48,7 @@ export const getReminder = data => dispatch => {
       });
     })
     .catch(error => {
-      console.log(error);
+      //consolelog(error);
       dispatch({
         type: STOP_LOADER,
         payload: {name: GET_REMINDER, value: false},

@@ -9,6 +9,7 @@ import {
   TOGGLE_LIKE,
   SEARCH_MEMORIES,
   GET_MONTH_WISE_MEMORIES,
+  GET_PHOTOS,
 } from './types';
 import Toast from '../NativeModules/Toast';
 const db = new Database();
@@ -29,7 +30,7 @@ export const getAllMemories = () => dispatch => {
       });
     })
     .catch(error => {
-      console.log(error);
+      //consolelog(error);
       dispatch({
         type: STOP_LOADER,
         payload: {name: GET_ALL_MEMORIES, value: false},
@@ -55,7 +56,7 @@ export const getMonthWiseMemories = month => dispatch => {
       });
     })
     .catch(error => {
-      console.log(error);
+      //consolelog(error);
       dispatch({
         type: STOP_LOADER,
         payload: {name: GET_ALL_MEMORIES, value: false},
@@ -82,7 +83,7 @@ export const addMemories = data => dispatch => {
       });
     })
     .catch(err => {
-      console.log(err);
+      //consolelog(err);
       dispatch({
         type: STOP_LOADER,
         payload: {name: ADD_MEMORIES, value: false},
@@ -98,7 +99,7 @@ export const togglelikeMemories = data => dispatch => {
         payload: data,
       });
     })
-    .catch(error => console.log(error));
+    .catch(error => consolelog(error));
 };
 
 export const searchMemories = searchText => dispatch => {
@@ -110,12 +111,19 @@ export const searchMemories = searchText => dispatch => {
       });
     })
     .catch(err => {
-      console.log(err);
+      //consolelog(err);
     });
 };
 
-export const getMemoriesById = id => dispatch => {
-  db.memoriesById(id).then(res => {
-    console.log(res, 'res');
-  });
+export const getPhotos = id => dispatch => {
+  db.getPhotos(id)
+    .then(res => {
+      dispatch({
+        type: GET_PHOTOS,
+        payload: res,
+      });
+    })
+    .catch(err => {
+      //consolelog(err);
+    });
 };

@@ -4,7 +4,7 @@ import {Dimensions} from 'react-native';
 import Heart from '../Assests/Heart';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {useDispatch} from 'react-redux';
-import {togglelikeMemories} from '../../Actions/memories';
+import {getPhotos, togglelikeMemories} from '../../Actions/memories';
 import {useNavigation} from '@react-navigation/native';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -80,6 +80,7 @@ const Card = props => {
   };
   const navigation = useNavigation();
   const goToViewPage = item => {
+    dispatch(getPhotos(item.primaryId));
     navigation.navigate('View', {screen: 'View1', params: {user: item}});
   };
 
