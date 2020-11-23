@@ -127,3 +127,45 @@ export const getPhotos = id => dispatch => {
       //consolelog(err);
     });
 };
+
+export const updateMemories = data => dispatch => {
+  console.log(data, 'data');
+  db.updateMemories(data.primaryId, data)
+    .then(res => {
+      console.log(res, 'res');
+    })
+    .catch(err => console.log(err));
+};
+
+export const deleteImage = data => dispatch => {
+  db.deleteImage(data)
+    .then(res => {
+      dispatch(getPhotos(data.primaryId));
+    })
+    .catch(err => console.log(err));
+};
+
+export const getMemoriesById = data => dispatch => {
+  console.log(data, 'ahuahia');
+  dispatch({
+    type: GET_LOADER,
+    payload: {name: GET_SINGLE_MEMORIES, value: true},
+  });
+  db.getMemoriesById(data)
+    .then(res => {
+      dispatch({
+        type: STOP_LOADER,
+        payload: {name: GET_SINGLE_MEMORIES, value: false},
+      });
+      dispatch({
+        type: GET_SINGLE_MEMORIES,
+        payload: res,
+      });
+    })
+    .catch(err =>
+      dispatch({
+        type: STOP_LOADER,
+        payload: {name: GET_SINGLE_MEMORIES, value: false},
+      }),
+    );
+};

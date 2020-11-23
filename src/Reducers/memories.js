@@ -4,11 +4,13 @@ import {
   ADD_MEMORIES,
   TOGGLE_LIKE,
   SERACH_MEMORIES,
+  GET_SINGLE_MEMORIES,
   GET_MONTH_WISE_MEMORIES,
 } from '../Actions/types';
 
 const initalState = {
   memories: [],
+  currentMemories: {},
   currentImages: [],
   searchedMemories: [],
 };
@@ -44,6 +46,11 @@ export default function(state = initalState, action) {
       return {
         ...state,
         searchedMemories: action.payload,
+      };
+    case GET_SINGLE_MEMORIES:
+      return {
+        ...state,
+        currentMemories: action.payload,
       };
     default:
       return {

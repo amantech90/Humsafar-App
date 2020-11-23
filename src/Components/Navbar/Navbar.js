@@ -34,12 +34,12 @@ const Navbar = props => {
             <MenuBar color="#808080" />
           </TouchableOpacity>
           <Logo>Humsafar</Logo>
-          {/* <TouchableOpacity onPress={() => trueModal()}>
+          <TouchableOpacity onPress={() => trueModal()}>
             <Bell />
-          </TouchableOpacity> */}
+          </TouchableOpacity>
         </NavContainer>
       </Container>
-      {/* <Reminder modalVisible={modalVisible} BackFunc={() => BackFunc()} /> */}
+      <Reminder modalVisible={modalVisible} BackFunc={() => BackFunc()} />
     </>
   );
 };

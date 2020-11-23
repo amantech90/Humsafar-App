@@ -1,5 +1,5 @@
 import SQLite from 'react-native-sqlite-storage';
-SQLite.DEBUG(false);
+SQLite.DEBUG(true);
 SQLite.enablePromise(true);
 const database_name = 'Humsafar.db';
 const database_version = '1.0';
@@ -165,6 +165,59 @@ export default class Database {
         });
     });
   }
+  getMemoriesById(data) {
+    console.log(data, 'from dat');
+    return new Promise(resolve => {
+      const memories = [];
+      // this.initDB()
+      //   .then(db => {
+      //     db.transaction(tx => {
+      //       tx.executeSql('SELECT * FROM Memories WHERE primaryId = ?', [
+      //         data.primaryId,
+      //       ]).then(([tx, results]) => {
+      //         var len = results.rows.length;
+      //         for (let i = 0; i < len; i++) {
+      //           let row = results.rows.item(i);
+
+      //           const {
+      //             primaryId,
+      //             title,
+      //             desc,
+      //             like,
+      //             day,
+      //             month,
+      //             year,
+      //             imagePath,
+      //             audioPath,
+      //           } = row;
+      //           memories.push({
+      //             primaryId,
+      //             title,
+      //             desc,
+      //             like,
+      //             day,
+      //             month,
+      //             year,
+      //             imagePath,
+      //             audioPath,
+      //           });
+      //         }
+
+      //         resolve(memories);
+      //       });
+      //     })
+      //       .then(result => {
+      //         this.closeDatabase(db);
+      //       })
+      //       .catch(err => {
+      //         //consolelog(err);
+      //       });
+      //   })
+      //   .catch(err => {
+      //     //consolelog(err);
+      //   });
+    });
+  }
   getPhotos(id) {
     let images = [];
     return new Promise(resolve => {
@@ -243,14 +296,16 @@ export default class Database {
     });
   }
   updateMemories(id, data) {
+    for (let i = 0; i < data.imagesPaths.length; i++) {
+      this.addImage(data.imagesPaths[i].memoriesId, data.imagesPaths[i].path);
+    }
     return new Promise(resolve => {
       this.initDB()
         .then(db => {
           db.transaction(tx => {
             tx.executeSql(
-              'UPDATE Memories SET primaryId = ?, title = ?, desc = ?, like = ?,day=?,month=?,year=?,imagePath=?,audioPath? WHERE primaryId = ?',
+              'UPDATE Memories SET title = ?, desc = ?, like = ?,day=?,month=?,year=?,imagePath=?,audioPath=? WHERE primaryId = ?',
               [
-                data.primaryId,
                 data.title,
                 data.desc,
                 data.like,
@@ -269,11 +324,11 @@ export default class Database {
               this.closeDatabase(db);
             })
             .catch(err => {
-              //consolelog(err);
+              console.log(err);
             });
         })
         .catch(err => {
-          //consolelog(err);
+          console.log(err);
         });
     });
   }
@@ -285,6 +340,31 @@ export default class Database {
             tx.executeSql('DELETE FROM Memories WHERE primaryId = ?', [
               id,
             ]).then(([tx, results]) => {
+              //consolelog(results);
+              resolve(results);
+            });
+          })
+            .then(result => {
+              this.closeDatabase(db);
+            })
+            .catch(err => {
+              //consolelog(err);
+            });
+        })
+        .catch(err => {
+          //consolelog(err);
+        });
+    });
+  }
+  deleteImage(data) {
+    return new Promise(resolve => {
+      this.initDB()
+        .then(db => {
+          db.transaction(tx => {
+            tx.executeSql(
+              'DELETE FROM ImagesPath WHERE memoriesId = ? and path=?',
+              [data.primaryId, data.path],
+            ).then(([tx, results]) => {
               //consolelog(results);
               resolve(results);
             });

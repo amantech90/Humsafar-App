@@ -58,9 +58,10 @@ const List = props => {
   const goToViewPage = item => {
     // //consolelog(item, 'ddhikdh');
     dispatch(getPhotos(item.primaryId));
-    navigation.navigate('View', {screen: 'View1', params: {user: item}});
+    navigation.navigate('View', {user: item});
   };
   const {item} = props;
+  console.log(props, 'pro');
   return (
     <Container
       onPress={() => goToViewPage(item)}

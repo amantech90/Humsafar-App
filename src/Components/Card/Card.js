@@ -81,7 +81,7 @@ const Card = props => {
   const navigation = useNavigation();
   const goToViewPage = item => {
     dispatch(getPhotos(item.primaryId));
-    navigation.navigate('View', {screen: 'View1', params: {user: item}});
+    navigation.navigate('View', {user: item});
   };
 
   const {item} = props;

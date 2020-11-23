@@ -50,7 +50,15 @@ const ViewPage = ({route, navigation}) => {
 
   return (
     <Container>
-      <BackNavbar Back={() => navigation.goBack()} title="Back" />
+      <BackNavbar
+        Back={() => navigation.goBack()}
+        title="Back"
+        update={true}
+        postTitle={title}
+        desc={desc}
+        images={memories.currentImages}
+        primaryId={primaryId}
+      />
       <ViewContainer>
         <Title>{title}</Title>
         <Date>{`${day > 10 ? day : `0${day}`}-${month}-${year}`}</Date>

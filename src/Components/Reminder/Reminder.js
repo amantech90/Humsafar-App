@@ -3,12 +3,9 @@ import styled from 'styled-components';
 import BackNavbar from '../BackNavbar/BackNavbar';
 import {Modal} from 'react-native';
 import Clock from '../Assests/Clock';
-import Notification from '../../NativeModules/Notification';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Toast from '../../NativeModules/Toast';
 import {useSelector, useDispatch} from 'react-redux';
-import RNCalendarEvents from 'react-native-calendar-events';
-import {addReminder, getReminder} from '../../Actions/reminder';
 
 const Container = styled.TouchableOpacity`
   padding: 10px 20px;
@@ -51,68 +48,13 @@ const Text2 = styled.Text`
 `;
 const Reminder = props => {
   const dispatch = useDispatch();
-  const userInfo = useSelector(state => state.auth);
-  const reminder = useSelector(state => state.reminder);
-  useEffect(() => {
-    dispatch(getReminder());
-  }, []);
   const [date, setDate] = useState(new Date(Date.now()));
   const [show, setShow] = useState(false);
 
   const selectTime = time => {
     let startDate = new Date(time.nativeEvent.timestamp).toISOString();
-    let endDate = new Date(
-      new Date(startDate).setFullYear(new Date().getFullYear() + 1),
-    ).toISOString();
-    //consolelog(startDate);
-    //consolelog(endDate);
-    RNCalendarEvents.authorizationStatus().then(data => {
-      //consolelog(data);
-    });
-    RNCalendarEvents.authorizeEventStore().then(data => {
-      //consolelog(data, 'djo');
-    });
-    let calendar = {
-      id: 'Humsafar_Reminder_1',
-      title: 'Add your memories',
-      color: '#03a9f4',
-      type: 'reminder',
-      accessLevel: 'owner',
-      startDate: new Date(startDate),
-      name: 'Humsafar',
-      recurrence: 'daily',
-      description: `It's time to add your wonderful memories in humsafar`,
-      source: {
-        name: userInfo.user.user.name,
-        isLocalAccount: true,
-      },
-
-      ownerAccount: userInfo.user.user.email,
-    };
-    RNCalendarEvents.saveCalendar(calendar).then(calenderId => {
-      RNCalendarEvents.saveEvent(calendar.title, {
-        calendarId: calenderId,
-        startDate: startDate,
-        recurrenceRule: {
-          frequency: 'daily',
-          endDate: endDate,
-        },
-        alarms: [
-          {
-            date: startDate,
-          },
-        ],
-      }).then(eventId => {
-        let data = {
-          time: startDate,
-          calendarId: calenderId,
-          eventId: eventId,
-        };
-        dispatch(addReminder(data));
-        props.BackFunc();
-      });
-    });
-    setShow(false);
+    console.log(startDate, 'date');
+    // setShow(false);
   };
   return (
     <Modal
@@ -131,17 +73,10 @@ const Reminder = props => {
           Please set your reminder time to notify you about to add new memories.
           So that you'll never miss to add memories.
         </Text1>
-        {!reminder ? (
-          <Button onPress={() => selectTime()}>
-            <ButtonText>Add Reminder to your calender</ButtonText>
-          </Button>
-        ) : (
-          <Text2>
-            Reminder is already set for every day at {'\n'}
-            {new Date(reminder.reminder.time).getHours()} :
-            {new Date(reminder.reminder.time).getMinutes()}
-          </Text2>
-        )}
+
+        <Button onPress={() => setShow(!show)}>
+          <ButtonText>Add Reminder to your calender</ButtonText>
+        </Button>
       </ModalContainer>
 
       {show ? (

@@ -57,7 +57,8 @@ const Routes = () => {
             drawerContent={props => <Drawer {...props} />}
             initialRouteParams="Home">
             <HomeNavigator.Screen name="Home" component={HomeScreen} />
-            <HomeNavigator.Screen name="View" component={ViewScreen} />
+            {/* <HomeNavigator.Screen name="View" component={ViewScreen} /> */}
+            <HomeNavigator.Screen name="View" component={ViewPage} />
           </HomeNavigator.Navigator>
         ) : (
           <AuthNavigator.Navigator>
