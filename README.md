@@ -1,2 +1,2 @@
 # Humsafar App
- A app to record the memories
+ An app to record the memories
